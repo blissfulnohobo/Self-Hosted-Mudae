@@ -3,12 +3,12 @@ from pathlib import Path
 from scripts.charactersList import characters
 
 
-DB_PATH = Path(__file__).resolve().parent.parent/"data"/"characters.db"
+CHAR_DB_PATH = Path(__file__).resolve().parent.parent/"data"/"characters.db"
 
 def initialize():
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CHAR_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     
-    connection = sqlite3.connect(DB_PATH)
+    connection = sqlite3.connect(CHAR_DB_PATH)
 
     connection.execute("""
         CREATE TABLE IF NOT EXISTS characters (
@@ -25,7 +25,7 @@ def initialize():
 
 
 def importCharacters():
-    connection = sqlite3.connect(DB_PATH)
+    connection = sqlite3.connect(CHAR_DB_PATH)
 
     connection.executemany("""
         INSERT OR IGNORE INTO characters (id, name, series, gender, roulette)

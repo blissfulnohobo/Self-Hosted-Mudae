@@ -1,4 +1,5 @@
 import scripts.initializeCharacterDatabase
+import scripts.initializeSavefile
 import core.characterRolling
 
 
@@ -7,10 +8,11 @@ def main():
 
     scripts.initializeCharacterDatabase.initialize()
     scripts.initializeCharacterDatabase.importCharacters()
+    scripts.initializeSavefile.initializeSavefile()
 
     print("Initial setup complete!")
 
-    print("Type $help for available commands.")
+    print("Type $help to get started.")
 
     while True:
         command = input("> ").strip()
@@ -19,9 +21,9 @@ def main():
             print(core.characterRolling.waifuRoll())
 
         elif command == "$help":
-            print("Available commands:\n$w or $wx\n$help\n$exit")
+            print("Available commands:\n$w or $wx\n$help\n$exit or $quit")
 
-        if command == "$exit":
+        if command == "$exit" or command == "$quit":
             break
 
 
