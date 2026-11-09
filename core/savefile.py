@@ -34,11 +34,20 @@ def checkAndUpdateForResets():
         rollsLeft = maxRolls
         rollResetTimestamp += missedResets * ROLL_INTERVAL
 
+    # Prevents reset timers from going over 1 or 3 hours after adjusting the system clock
+    if now + ROLL_INTERVAL < rollResetTimestamp:
+        while now + ROLL_INTERVAL <= rollResetTimestamp:
+            rollResetTimestamp -= ROLL_INTERVAL
+
     if now >= claimResetTimestamp:
         missedResets = (now - claimResetTimestamp) // CLAIM_INTERVAL + 1
 
         claimAvailable = 1
         claimResetTimestamp += missedResets * CLAIM_INTERVAL
+
+    if now + CLAIM_INTERVAL < claimResetTimestamp:
+        while now + CLAIM_INTERVAL <= claimResetTimestamp:
+            claimResetTimestamp -= CLAIM_INTERVAL
 
     savefileConnection.execute("""
         UPDATE player

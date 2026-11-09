@@ -1,6 +1,7 @@
 import scripts.initializeCharacterDatabase
 import scripts.initializeSavefile
 import core.characterRolling
+import core.tu
 
 
 def main():
@@ -20,8 +21,11 @@ def main():
         if command == "$w" or command == "$wx":
             print(core.characterRolling.waifuRoll())
 
+        if command == "$tu":
+            print(core.tu.tu())
+
         elif command == "$help":
-            print("Available commands:\n$w or $wx\n$help\n$exit or $quit")
+            print("Available commands:\n$w or $wx\n$tu\n$help\n$exit or $quit")
 
         if command == "$exit" or command == "$quit":
             break
