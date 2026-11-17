@@ -1,7 +1,8 @@
 import scripts.initializeCharacterDatabase
 import scripts.initializeSavefile
-import core.characterRolling
 import core.tu
+import core.characterRolling
+import core.claiming
 
 
 def main():
@@ -16,18 +17,24 @@ def main():
     print("Type $help to get started.")
 
     while True:
-        command = input("> ").strip()
+        fullCommand = input("> ").strip().lower().split()
+        
+        mainCommand = fullCommand[0]
+        arguments = fullCommand[1:]
 
-        if command == "$w" or command == "$wx":
-            print(core.characterRolling.waifuRoll())
-
-        if command == "$tu":
+        if mainCommand == "$tu":
             print(core.tu.tu())
 
-        elif command == "$help":
-            print("Available commands:\n$w or $wx\n$tu\n$help\n$exit or $quit")
+        if mainCommand == "$w" or mainCommand == "$wx":
+            print(core.characterRolling.waifuRoll())
 
-        if command == "$exit" or command == "$quit":
+        if mainCommand == "$claim" and len(arguments):
+            core.claiming.claimCharacter(int(arguments[0]))
+
+        elif mainCommand == "$help":
+            print("Available commands:\n$w or $wx\n$claim [Character ID]\n$tu\n$help\n$exit or $quit")
+
+        if mainCommand == "$exit" or mainCommand == "$quit":
             break
 
 

@@ -1,7 +1,6 @@
 from core.savefile import savefileConnection, checkAndUpdateForResets
 from core.characterDatabase import characterDatabaseConnection
-from datetime import datetime, timezone, timedelta
-from math import ceil
+from core.tu import calculateNextResets
 
 
 def waifuRoll():
@@ -12,22 +11,32 @@ def waifuRoll():
 
     if rollsLeft > 0:
         rolledChar = characterDatabaseConnection.execute("""
-            SELECT * FROM characters
+            SELECT id 
+            FROM characters
             WHERE gender = ?
             ORDER BY RANDOM()
             LIMIT 1
-        """, ("waifu",)).fetchone()
+        """, ("waifu",)).fetchone()[0]
 
         savefileConnection.execute("UPDATE player SET rollsLeft = rollsLeft - 1")
+        savefileConnection.execute("INSERT INTO rollHistory (characterId) VALUES (?)", (rolledChar,))
+
+        # Limit rolls logged to the past 50 rolls
+        savefileConnection.execute("""
+            DELETE FROM rollHistory
+            WHERE rollIndex NOT IN (
+                SELECT rollIndex
+                FROM rollHistory
+                ORDER BY rollIndex DESC
+                LIMIT 50
+            )
+        """)
 
         savefileConnection.commit()
 
         return rolledChar
 
     else:
-        rollResetTimestamp = savefileConnection.execute("SELECT rollResetTimestamp FROM settings").fetchone()[0]
-        rollResetTimestamp = datetime.fromisoformat(rollResetTimestamp)
+        minutesTillNextRollReset = calculateNextResets()[0]
 
-        minutesTillNextRollsReset = ceil((rollResetTimestamp - datetime.now(timezone.utc)).total_seconds() / 60)
-
-        return f"The roulette is limited to {maxRolls} uses per hour. {minutesTillNextRollsReset} min left."
+        return f"The roulette is limited to {maxRolls} uses per hour. {minutesTillNextRollReset} min left."

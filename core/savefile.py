@@ -11,15 +11,8 @@ savefileConnection = sqlite3.connect(SAVEFILE_PATH)
 
 
 def checkAndUpdateForResets():
-    state = savefileConnection.execute("""
-        SELECT maxRolls, rollsLeft, claimAvailable
-        FROM player
-    """).fetchone()
-
-    timers = savefileConnection.execute("""
-        SELECT rollResetTimestamp, claimResetTimestamp
-        FROM settings
-    """).fetchone()
+    state = savefileConnection.execute("SELECT maxRolls, rollsLeft, claimAvailable FROM player").fetchone()
+    timers = savefileConnection.execute("SELECT rollResetTimestamp, claimResetTimestamp FROM settings").fetchone()
 
     maxRolls, rollsLeft, claimAvailable = state
     rollResetTimestamp, claimResetTimestamp = timers
