@@ -29,7 +29,7 @@ def main():
             print(core.characterRolling.waifuRoll())
 
         if mainCommand == "$claim" and len(arguments):
-            core.claiming.claimCharacter(int(arguments[0]))
+            core.claiming.claimCharacter(arguments[0])
 
         elif mainCommand == "$help":
             print("Available commands:\n$w or $wx\n$claim [Character ID]\n$tu\n$help\n$exit or $quit")
