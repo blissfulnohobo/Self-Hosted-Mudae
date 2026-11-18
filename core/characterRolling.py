@@ -3,7 +3,7 @@ from core.characterDatabase import characterDatabaseConnection
 from core.tu import calculateNextResets
 
 
-def waifuRoll():
+def characterRoll(gender, roulette):
     checkAndUpdateForResets()
 
     rollsData = savefileConnection.execute("SELECT maxRolls, rollsLeft FROM player").fetchone()
@@ -13,10 +13,11 @@ def waifuRoll():
         rolledChar = characterDatabaseConnection.execute("""
             SELECT id 
             FROM characters
-            WHERE gender = ?
+            WHERE (? IS NULL OR gender = ? OR gender = 'both')
+            AND (? IS NULL OR roulette = ? OR roulette = 'both')
             ORDER BY RANDOM()
             LIMIT 1
-        """, ("waifu",)).fetchone()[0]
+        """, (gender, gender, roulette, roulette)).fetchone()[0]
 
         savefileConnection.execute("UPDATE player SET rollsLeft = rollsLeft - 1")
         savefileConnection.execute("INSERT INTO rollHistory (characterId) VALUES (?)", (rolledChar,))

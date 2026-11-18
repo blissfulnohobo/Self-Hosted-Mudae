@@ -41,14 +41,14 @@ def claimCharacter(characterId):
 
             savefileConnection.commit()
 
-            print(f"💖 You and {characterName} are now married! 💖")
+            return f"💖 You and {characterName} are now married! 💖"
 
         else:
             hoursTillNextClaimReset = calculateNextResets()[1]
             minutesTillNextClaimReset = calculateNextResets()[2]
 
             if hoursTillNextClaimReset > 0:
-                print(f"You can claim once per interval of 3h. The next interval begins in {hoursTillNextClaimReset}h {minutesTillNextClaimReset} min.")
+                return f"You can claim once per interval of 3h. The next interval begins in {hoursTillNextClaimReset}h {minutesTillNextClaimReset} min."
 
             else:
-                print(f"You can claim once per interval of 3h. The next interval begins in {minutesTillNextClaimReset} min.")
+                return f"You can claim once per interval of 3h. The next interval begins in {minutesTillNextClaimReset} min."
